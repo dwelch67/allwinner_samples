@@ -23,6 +23,12 @@ uboot dont care for the rest (for bare metal).
 
 Using a 3.3v usb ftdi uart breakout works fine isnt getting hot.
 
+Actually the silkscreen on the board says nanopi v1.2 and the debug
+header, which is the only one on mine that came populated, is marked
+and there is a legend on the board showing the pinout.
+
+
+
 Hit any key when you plug it in, to get to the uboot prompt
 
 printenv to see the environment
