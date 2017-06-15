@@ -1,0 +1,49 @@
+
+I already have the ntc_chip_samples which should/could move here,
+and maybe I should or still can make a nanopi repo instead of this
+allwinner one, but for now collecting some allwinner baremetal examples
+here.
+
+sunxi
+
+https://linux-sunxi.org
+
+Not sure if this is a company or group of developers or what, but software
+for the Allwinner parts is from sunxi, linux ports, etc.
+
+Allwinner has been making ARM based (linux capable) parts for a while
+now several different ARM cores through 32 bit and into 64 bit.
+
+Most/all of the not a raspberry pi, pi boards, banana pi, orange pi,
+nano pi, etc plus a number of other boards are allwinner based.  They
+are NOT raspberry pi clones they might have a similar ARM core but
+in no way do they boot the same or have the same GPU or peripherals or
+anything like that, the boards are made to the same form factor to
+perhaps confuse people just like there have been mp3 players and other
+devices that look like the mainstream product but are a low cost,
+incompatible, clone.
+
+I am still scratching the surface on my knowledge, in thory you can
+recover from a bad boot image, for the ones with sd cards, well that
+is a bit obvious (just program another sd card or reformat/program
+this one), for ones that have on chip flash that is where you have to
+work harder.
+
+My typical starting place is to hook up the uart, and stop uboot
+while booting, use printenv/setenv/saveenv to change the bootcmd
+environment variable to something that doesnt load a program like
+
+setenv bootcmd echo hello
+
+Then when it boots I just get a u-boot prompt I dont have to hit a key
+in a hurry anymore.  u-boot is always custom but often has a srec
+download or y-modem or x-modem, any of these will work fine.
+
+Eventually I want to replace u-boot, probably lose dram unless I
+choose to copy that over (initialzing dram is a many month project
+if you have the right documentation and engineers).  So far the parts
+I have tried have some sram on them and that is enough for what I do.
+Can always just use u-boot and get dram.
+
+My examples dont generally care about arm-linux-gnueabi vs arm-none-eabi
+see the TOOLCHAIN file to see a few of the very many ways to get tools.

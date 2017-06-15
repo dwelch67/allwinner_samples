@@ -1,0 +1,64 @@
+
+
+nanopi.org I guess mine is the older nanopi neo although the schematics
+are not exactly the same but these are open source-ish hardware so
+the one I got on ebay for $16 is probably...just a clone...
+
+The schematics for the board if you figure out which you have, and more
+important the Allwinner H3 datasheet can be found at nanopi.org for
+this board.
+
+
+then went to (stumbled upon)
+
+dietpi.com
+
+followed the instructions to make a dietpi sd card, only really want
+uboot dont care for the rest (for bare metal).
+
+1 gnd
+2 5v
+3 uart_tx
+4 uart_rx
+
+Using a 3.3v usb ftdi uart breakout works fine isnt getting hot.
+
+Hit any key when you plug it in, to get to the uboot prompt
+
+printenv to see the environment
+
+...
+bootcmd=run loadsplash; run distro_bootcmd
+...
+
+setenv bootcmd_orig 'run loadsplash; run distro_bootcmd'
+setenv bootcmd echo hello
+saveenv
+
+Now when it powers on
+
+U-Boot SPL 2017.01-armbian (Feb 03 2017 - 12:43:37)
+DRAM: 256 MiB
+Trying to boot from MMC1
+
+U-Boot 2017.01-armbian (Feb 03 2017 - 12:43:37 +0000) Allwinner Technology
+
+CPU:   Allwinner H3 (SUN8I 1680)
+Model: FriendlyARM NanoPi NEO
+DRAM:  256 MiB
+MMC:   SUNXI SD/MMC: 0
+In:    serial
+Out:   serial
+Err:   serial
+Net:   phy interface0
+eth0: ethernet@1c30000
+Hit any key to stop autoboot:  0
+hello
+=>
+
+and you can use the loads command to wait for an srec file download
+(just do an ascii download of the .srec files that you build)
+
+Dont know if/where there is a reset pin yet so have to power cycle per
+run.
+
