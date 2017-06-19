@@ -16,6 +16,9 @@ dietpi.com
 followed the instructions to make a dietpi sd card, only really want
 uboot dont care for the rest (for bare metal).
 
+[later I built a u-boot binary and didnt need dietpi, but still do
+the setenve and saveenv after hitting a key, whichever path you choose]
+
 1 gnd
 2 5v
 3 uart_tx
@@ -27,17 +30,8 @@ Actually the silkscreen on the board says nanopi v1.2 and the debug
 header, which is the only one on mine that came populated, is marked
 and there is a legend on the board showing the pinout.
 
-
-
 Hit any key when you plug it in, to get to the uboot prompt
 
-printenv to see the environment
-
-...
-bootcmd=run loadsplash; run distro_bootcmd
-...
-
-setenv bootcmd_orig 'run loadsplash; run distro_bootcmd'
 setenv bootcmd echo hello
 saveenv
 
@@ -68,3 +62,106 @@ and you can use the loads command to wait for an srec file download
 Dont know if/where there is a reset pin yet so have to power cycle per
 run.
 
+
+---- building u-boot ----
+
+The top level readme shows a few toolchain solutions (in the TOOLCHAIN
+file actually).  Well those are fine for making my baremetal binaries
+but I recently built u-boot from sources and needed to do a little
+more work
+
+https://releases.linaro.org/components/toolchain/binaries/latest/arm-linux-gnueabihf/gcc-linaro-6.3.1-2017.05-i686_arm-linux-gnueabihf.tar.xz
+
+went to /opt as root and tar xvf interesting that it solved the what
+do I do with .tar.xz
+
+then set my path to use that directory
+
+PATH=/opt/gcc-linaro-6.3.1-2017.05-i686_arm-linux-gnueabihf/:$PATH
+
+went here
+
+http://linux-sunxi.org/Mainline_U-Boot
+
+did this
+
+git clone git://git.denx.de/u-boot.git
+
+cd u-boot
+
+did this version
+
+git checkout v2016.11
+
+export CROSS_COMPILE=arm-linux-gnueabihf-
+make nanopi_neo_defconfig
+make u-boot-sunxi-with-spl.bin
+
+using this
+
+http://linux-sunxi.org/Bootable_SD_card
+
+Now you you have to find your card and replace /dev/sdz with
+whatever yours is, no numbers, and umount first
+mount or dmesg after inserting the card or plugging your card reader
+into your linux computer will show the last thing is the card
+you can do damage so not my fault if you get it wrong, this can
+wipe out your hard disk for example if you get it wrong.
+
+wipe out the partition table
+dd if=/dev/zero of=/dev/sdz bs=1M count=1
+sync
+dd if=u-boot-sunxi-with-spl.bin of=/dev/sdz bs=1024 seek=8
+sync
+
+put it in the nanopi neo and power on.
+
+
+
+U-Boot SPL 2016.11-g29e0cfb-dirty (Jun 14 2017 - 10:28:31)
+DRAM: 256 MiB
+Trying to boot from MMC1
+
+
+U-Boot 2016.11-g29e0cfb-dirty (Jun 14 2017 - 10:28:31 -0700) Allwinner Technoloy
+
+CPU:   Allwinner H3 (SUN8I 1680)
+Model: Xunlong Orange Pi One
+DRAM:  256 MiB
+MMC:   SUNXI SD/MMC: 0
+** First descriptor is NOT a primary desc on 0:1 **
+In:    serial
+Out:   serial
+Err:   serial
+Net:   phy interface0
+eth0: ethernet@1c30000
+Hit any key to stop autoboot:  0
+
+I found that stop autoboot string, modified it, re-built, reflashed
+
+U-Boot SPL 2016.11-dirty (Jun 18 2017 - 21:46:01)
+DRAM: 256 MiB
+Trying to boot from MMC1
+
+
+U-Boot 2016.11-dirty (Jun 18 2017 - 21:46:01 -0400) Allwinner Technology
+
+CPU:   Allwinner H3 (SUN8I 1680)
+Model: FriendlyARM NanoPi NEO
+DRAM:  256 MiB
+MMC:   SUNXI SD/MMC: 0
+** First descriptor is NOT a primary desc on 0:1 **
+In:    serial
+Out:   serial
+Err:   serial
+Net:   No ethernet found.
+Hit any key to stop autobootz:  0
+
+and there is my modification autobootz
+
+so it is running the one I built, not something left on the card from
+dietpi or anything else.
+
+My real interest is replacing u-boot with my own baremetal program
+no dram or anything like that, there is sram on the card, but will
+see if I get there.
