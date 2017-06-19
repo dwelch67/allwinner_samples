@@ -54,7 +54,15 @@ int notmain ( unsigned int sp )
     hexstrings(0x01F01C00+0x0284); hexstring(GET32(0x01F01C00+0x0284));
     hexstrings(0x01F01C00+0x0288); hexstring(GET32(0x01F01C00+0x0288));
 
-    
+    hexstrings(0x01C20000+0x0060); hexstring(GET32(0x01C20000+0x0060));
+    hexstrings(0x01C20000+0x0064); hexstring(GET32(0x01C20000+0x0064));
+    hexstrings(0x01C20000+0x0068); hexstring(GET32(0x01C20000+0x0068));
+    hexstrings(0x01C20000+0x006C); hexstring(GET32(0x01C20000+0x006C));
+    hexstrings(0x01C20000+0x0070); hexstring(GET32(0x01C20000+0x0070));
+
+
+
+
     return(0);
 }
 //-------------------------------------------------------------------

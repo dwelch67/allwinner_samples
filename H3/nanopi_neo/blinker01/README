@@ -1,0 +1,8 @@
+see top level README for documentation and how to run this program
+
+so the schematic shows an led on PA10 and one on PL10.  I can only get
+the PA10 (painfully blue led) to blink.
+
+So running from sram 0x44000 is significantly slower than dram for
+some reason.  Something to figure out some day.
+
