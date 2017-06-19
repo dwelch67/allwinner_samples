@@ -77,7 +77,7 @@ do I do with .tar.xz
 
 then set my path to use that directory
 
-PATH=/opt/gcc-linaro-6.3.1-2017.05-i686_arm-linux-gnueabihf/:$PATH
+PATH=/opt/gcc-linaro-6.3.1-2017.05-i686_arm-linux-gnueabihf/bin/:$PATH
 
 went here
 
