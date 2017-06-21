@@ -1,0 +1,7 @@
+see top level README for documentation and how to run this program
+
+This uses timer0, 24Mhz reference clock, count to 24 Million and that
+is one second.  One second on, one second off...
+
+TMR0_IRQ_STA_REG says it is a R/W register but you need to write one
+to clear not just write zero.
