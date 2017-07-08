@@ -34,6 +34,7 @@ while booting, use printenv/setenv/saveenv to change the bootcmd
 environment variable to something that doesnt load a program like
 
 setenv bootcmd echo hello
+saveenv
 
 Then when it boots I just get a u-boot prompt I dont have to hit a key
 in a hurry anymore.  u-boot is always custom but often has a srec

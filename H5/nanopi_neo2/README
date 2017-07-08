@@ -1,0 +1,145 @@
+
+
+nanopi.org
+
+I have a nanopi neo2.
+
+Currently named the H5_User_Manual.pdf but is the full datasheet with
+register specs.
+https://github.com/OrangePiLibra/OrangePi_H5SDK/tree/master/Documentation/Hardware
+https://github.com/OrangePiLibra/OrangePi_H5SDK/blob/master/Documentation/Hardware/H5_User_Manual.pdf
+
+http://wiki.friendlyarm.com/wiki/index.php/NanoPi_NEO2
+http://wiki.friendlyarm.com/wiki/images/a/a1/Schematic_NanoPi_NEO2-v1.0_1701.pdf
+
+I dont control these pages so obviously the above links and names
+could change at any time.
+
+So on my board, unlike the nanopi neo I have, the silkscreen
+pinout is wrong, the webpage/schematic is right
+
+1 uart_rx
+2 uart_tx
+3 5v
+4 gnd
+
+Using a 3.3v usb ftdi uart breakout works fine isnt getting hot.
+
+You can go to dietpi for example and get an image that you dd
+onto an sd card.  I find this easiest.
+
+For building u-boot I used linaro.
+
+https://releases.linaro.org/components/toolchain/binaries/latest/aarch64-linux-gnu/
+https://releases.linaro.org/components/toolchain/binaries/latest/aarch64-linux-gnu/gcc-linaro-6.3.1-2017.05-x86_64_aarch64-linux-gnu.tar.xz
+
+went to /opt as root and tar xf interesting that it solved the what
+do I do with .tar.xz
+
+then set my path to use that directory
+
+PATH=/opt/gcc-linaro-6.3.1-2017.05-x86_64_aarch64-linux-gnu/bin/:$PATH
+
+went here
+
+http://linux-sunxi.org/Mainline_U-Boot
+
+did this
+
+git clone git://git.denx.de/u-boot.git
+
+cd u-boot
+
+did this version
+
+git checkout v2016.11
+
+export CROSS_COMPILE=aarch64-linux-gnu-
+make nanopi_neo2_defconfig
+make u-boot-sunxi-with-spl.bin
+
+(had to do some apt-gets that didnt make sense but did them and it worked)
+
+using this
+
+http://linux-sunxi.org/Bootable_SD_card
+
+Now you you have to find your card and replace /dev/sdz with
+whatever yours is, no numbers, and umount first
+mount or dmesg after inserting the card or plugging your card reader
+into your linux computer will show the last thing is the card
+you can do damage so not my fault if you get it wrong, this can
+wipe out your hard disk for example if you get it wrong.
+
+wipe out the partition table
+dd if=/dev/zero of=/dev/sdz bs=1M count=1
+sync
+dd if=u-boot-sunxi-with-spl.bin of=/dev/sdz bs=1024 seek=8
+sync
+
+put it in the nanopi neo2 and power on.
+
+
+U-Boot SPL 2017.07-rc3-00028-g7f1380e (Jul 07 2017 - 15:34:59)
+DRAM: 512 MiB
+Trying to boot from MMC1
+
+
+U-Boot 2017.07-rc3-00028-g7f1380e (Jul 07 2017 - 15:34:59 -0400) Allwinner Technology
+
+CPU:   Allwinner H5 (SUN50I)
+Model: FriendlyARM NanoPi NEO 2
+DRAM:  512 MiB
+MMC:   SUNXI SD/MMC: 0
+** First descriptor is NOT a primary desc on 0:1 **
+In:    serial
+Out:   serial
+Err:   serial
+Net:   No ethernet found.
+starting USB...
+No controllers found
+Hit any key to stop autoboot:  0
+
+Hit any key when you plug it in, to get to the uboot prompt
+
+setenv bootcmd echo hello
+saveenv
+
+Now when it powers on
+
+U-Boot SPL 2017.07-rc3-00028-g7f1380e (Jul 07 2017 - 15:34:59)
+DRAM: 512 MiB
+Trying to boot from MMC1
+
+
+U-Boot 2017.07-rc3-00028-g7f1380e (Jul 07 2017 - 15:34:59 -0400) Allwinner Technology
+
+CPU:   Allwinner H5 (SUN50I)
+Model: FriendlyARM NanoPi NEO 2
+DRAM:  512 MiB
+MMC:   SUNXI SD/MMC: 0
+** First descriptor is NOT a primary desc on 0:1 **
+In:    serial
+Out:   serial
+Err:   serial
+Net:   No ethernet found.
+starting USB...
+No controllers found
+Hit any key to stop autoboot:  0
+hello
+=>
+
+and you can use the loads command to wait for an srec file download
+(just do an ascii download of the .srec files that you build)
+
+Dont know if/where there is a reset pin yet so have to power cycle per
+run.
+
+most of these programs you
+
+=> loads
+then ASCII/raw download the notmain.srec file
+=> go 0x42000000
+
+See the README in each directory to see if this varies.
+

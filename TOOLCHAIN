@@ -1,4 +1,12 @@
 
+TODO update this to reflect aarch64 as well as the 32 bit instruction
+set (aarch32).  My build_gcc repo has scripts for both, but the other
+links/etc need to be updated here.
+
+
+
+
+
 Toolchain.  I run on linux, these examples are tested on linux, other
 than subtle differences like rm vs del in the Makefile, you should be
 able to use these examples on a windows or mac system.

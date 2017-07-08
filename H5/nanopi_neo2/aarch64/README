@@ -1,0 +1,9 @@
+
+This is how we are booting in 64 bit mode, aarch64 instruction set.
+Kinda the point for having this board IMO.
+
+Unlike a raspberry pi 3 we dont have to "sort" the cores out.  Like
+a sane chip (and maybe the pi3 chip is, but not how they use it from
+the GPU bootloader), the individual core clock enable and reset lines
+are separate in a register, so only one core is coming up.  We have
+to figure out how to start the others...
